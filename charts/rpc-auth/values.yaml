@@ -2,8 +2,9 @@
 # # This is a YAML-formatted file.
 # # Declare variables to be passed into your templates.
 
-container_images:
-  rpc_auth_image: tezos-rpc-auth:dev
+containers:
+  rpc-auth: tqtezos/tezos-k8s-rpc-auth:1.0b1
+  # rpc-auth: tezos-rpc-auth:dev
 
 redis:
   host: redis-service

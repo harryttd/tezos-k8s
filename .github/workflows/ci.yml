@@ -106,23 +106,23 @@ jobs:
   #         user: __token__
   #         password: ${{ secrets.PYPI_TOKEN }}
 
-  list_containers_to_publish:
-    # based on
-    # https://stackoverflow.com/a/62953566/207209
-    runs-on: ubuntu-latest
-    # needs: test
-    if: github.event_name == 'release' && github.event.action == 'created'
-    outputs:
-      matrix: ${{ steps.gen-containers-matrix.outputs.matrix }}
-    steps:
-      - uses: actions/checkout@v2
+  # list_containers_to_publish:
+  #   # based on
+  #   # https://stackoverflow.com/a/62953566/207209
+  #   runs-on: ubuntu-latest
+  #   # needs: test
+  #   # if: github.event_name == 'release' && github.event.action == 'created'
+  #   outputs:
+  #     matrix: ${{ steps.gen-containers-matrix.outputs.matrix }}
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - id: gen-containers-matrix
-        run: |
-          container_list=$(jq -c -n --arg cont "$(find -name 'Dockerfile' -printf '%h\n' | sort -u | sed 's/.\///')" '{ container: $cont | split("\n")}')
-          echo "Dynamically generated container list based on subdirectories of the docker directory. The following list will be passed to next build step:"
-          echo $container_list
-          echo "::set-output name=matrix::$container_list"
+  #     - id: gen-containers-matrix
+  #       run: |
+  #         container_list=$(jq -c -n --arg cont "$(find -name 'Dockerfile' -printf '%h\n' | sort -u | sed 's/.\///')" '{ container: $cont | split("\n")}')
+  #         echo "Dynamically generated container list based on subdirectories of the docker directory. The following list will be passed to next build step:"
+  #         echo $container_list
+  #         echo "::set-output name=matrix::$container_list"
 
   # publish_containers:
   #   # based on
@@ -130,8 +130,8 @@ jobs:
   #   runs-on: ubuntu-latest
   #   needs: list_containers_to_publish
   #   if: github.event_name == 'release' && github.event.action == 'created'
-  #   strategy:
-  #     matrix: ${{fromJson(needs.list_containers_to_publish.outputs.matrix)}}
+  # strategy:
+  #   matrix: ${{fromJson(needs.list_containers_to_publish.outputs.matrix)}}
 
   #   steps:
   #     - uses: actions/checkout@v2
@@ -181,10 +181,8 @@ jobs:
 
   release_helm_charts:
     runs-on: ubuntu-latest
-    needs: list_containers_to_publish
-    if: github.event_name == 'release' && github.event.action == 'created'
-    strategy:
-      matrix: ${{fromJson(needs.list_containers_to_publish.outputs.matrix)}}
+    # needs: list_containers_to_publish
+    # if: github.event_name == 'release' && github.event.action == 'created'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -201,17 +199,50 @@ jobs:
         with:
           version: v3.4.0
 
-      - name: Update Chart Versions
-        uses: mikefarah/yq@3.4.1
+      - name: Install yq
         run: |
-          echo "${{ github.ref }}"
-          echo "${{ matrix.container }}"
-          yq eval charts/tezos/Charts.yaml
+          sudo wget -q https://github.com/mikefarah/yq/releases/download/v4.2.0/yq_linux_amd64 -O /usr/bin/yq
+          sudo chmod +x /usr/bin/yq
+
+      - name: Get Release Version
+        id: get_release_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - name: Set Helm Chart and Image Versions
+        run: |
+          for chart in charts/*; do
+            [[ ! -d "$chart" ]] && continue
+            echo $chart
+
+            VERSION=${{ steps.get_release_version.outputs.VERSION }}
+            yq e ".version = \"$VERSION\"" -i "$chart/Chart.yaml"
+            tq_images=$(yq e '(.containers[] | select(. == "tqtezos/tezos-k8s*")) | path | .[-1]' "$chart/values.yaml")
+
+            for image in $tq_images; do
+              yq e ".containers.$image = \"tqtezos/tezos-k8s-$image:$VERSION\"" -i $chart/values.yaml
+            done
+
+            helm dependency update $chart
+          done
+
+      - name: Get list of changed files
+        run: |
+          git diff
+          git branch
+          git commit --all -m "Update Helm Chart Versions"
+          git push origin HEAD:master
 
       # - name: Run chart-releaser
       #   uses: helm/chart-releaser-action@v1.1.0
       #   env:
       #     CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Publish Helm charts
+        uses: stefanprodan/helm-gh-pages@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          linting: off
+        # branch: master
+        # target_dir: docs
 
   # release:
   #   runs-on: ubuntu-latest
