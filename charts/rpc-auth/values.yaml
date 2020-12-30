@@ -3,7 +3,7 @@
 # # Declare variables to be passed into your templates.
 
 containers:
-  rpc-auth: tqtezos/tezos-k8s-null:7.3.1
+  rpc-auth: tqtezos/tezos-k8s-null:6.4
   # rpc-auth: tezos-rpc-auth:dev
 redis:
   host: redis-service

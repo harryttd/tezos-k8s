@@ -227,7 +227,7 @@ jobs:
             helm dependency update $chart
           done
 
-      - name: Get Branch Name
+      - name: Get Branch Name of Release
         id: get_branch_name
         run: |
           raw=$(git branch -r --contains ${GITHUB_REF})
@@ -238,23 +238,17 @@ jobs:
       - name: Commit Chart Changes to Branch
         run: |
           git commit --all -m "Update Helm Chart Versions to ${{ steps.get_release_version.outputs.VERSION }}"
-          git push origin HEAD:${{ steps.get_branch_name.outputs.BRANCH }}
+          git push origin "HEAD:${{ steps.get_branch_name.outputs.BRANCH }}"
 
-      - name: Publish Helm charts
-        uses: stefanprodan/helm-gh-pages@master
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          linting: off
-        # branch: master
-        # target_dir: docs
+      # - name: Publish Helm charts
+      #   uses: stefanprodan/helm-gh-pages@master
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     linting: off
+      #   # branch: master
+      #   # target_dir: docs
 
-  # # release:
-  # #   runs-on: ubuntu-latest
-  # #   steps:
-  # #     - uses: actions/checkout@v2
-  # #     - name: Publish Helm charts
-  # #       uses: stefanprodan/helm-gh-pages@master
-  # #       with:
-  # #         token: ${{ secrets.GITHUB_TOKEN }}
-  # #         # branch: master
-  # #         # target_dir: docs
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.1.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
