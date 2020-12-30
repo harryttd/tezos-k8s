@@ -187,7 +187,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Extract branch name
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: |
+          raw=$(git branch -r --contains ${{ github.ref }})
+          branch=${raw/origin\/}
+          echo ::set-output name=branch::$branch
         id: extract_branch
       - name: log
         run: |
