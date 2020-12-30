@@ -1,6 +1,6 @@
 dependencies:
 - name: authenticated-rpc-tezos-chain
   repository: file://../rpc-auth
-  version: 1.2.3
-digest: sha256:b4e18d88e08185fa116b09c57a4093b6638719c69ba0ca20fae8618e0e6f62fd
-generated: "2020-12-29T01:07:53.979718308Z"
+  version: 7.3.1
+digest: sha256:2b867c5806a723053367bd7c0374e4b02ff39805ea775b5ba500780cc6fb4b72
+generated: "2020-12-30T18:55:09.704861019Z"
