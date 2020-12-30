@@ -2,7 +2,20 @@ apiVersion: v1
 entries:
   authenticated-rpc-tezos-chain:
   - apiVersion: v2
-    created: "2020-12-30T22:37:51.786612363Z"
+    created: "2020-12-30T22:47:15.683744604Z"
+    description: A Helm chart for Tezos RPC authentication for a private chain
+    digest: e63134b908570011f8f3c154a41bea7532f865a8e7c9ef7ef5c14a9ec072b8f2
+    home: https://github.com/tqtezos/tezos-k8s
+    keywords:
+    - tezos
+    - blockchain
+    name: authenticated-rpc-tezos-chain
+    type: application
+    urls:
+    - https://harryttd.github.io/tezos-k8s/authenticated-rpc-tezos-chain-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
+    created: "2020-12-30T22:47:15.6833646Z"
     description: A Helm chart for Tezos RPC authentication for a private chain
     digest: ab305ff7a82e7b478db09880e9263c7e517d8b74d38af451d6e5dffc525205b8
     home: https://github.com/tqtezos/tezos-k8s
@@ -16,7 +29,24 @@ entries:
     version: 1.0.1
   tezos-chain:
   - apiVersion: v2
-    created: "2020-12-30T22:37:51.788930868Z"
+    created: "2020-12-30T22:47:15.685935824Z"
+    dependencies:
+    - condition: rpc_auth
+      name: authenticated-rpc-tezos-chain
+      repository: file://../rpc-auth
+    description: A Helm chart for Tezos nodes on Kubernetes
+    digest: 8524b821c1c2419c6cc3fac2810da541140c80559e576b1916f917de50206ba0
+    home: https://github.com/tqtezos/tezos-k8s
+    keywords:
+    - tezos
+    - blockchain
+    name: tezos-chain
+    type: application
+    urls:
+    - https://harryttd.github.io/tezos-k8s/tezos-chain-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
+    created: "2020-12-30T22:47:15.684861114Z"
     dependencies:
     - condition: rpc_auth
       name: authenticated-rpc-tezos-chain
@@ -32,4 +62,4 @@ entries:
     urls:
     - https://harryttd.github.io/tezos-k8s/tezos-chain-1.0.1.tgz
     version: 1.0.1
-generated: "2020-12-30T22:37:51.786123961Z"
+generated: "2020-12-30T22:47:15.682789395Z"
