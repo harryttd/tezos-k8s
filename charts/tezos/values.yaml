@@ -7,8 +7,10 @@ zerotier_in_use: false
 zerotier_config:
   zerotier_network: YOUR_NETWORK_ID_HERE
   zerotier_token: YOUR_ZEROTIER_TOKEN_HERE
+container_images:
+  rpc_auth_image: hello
 containers:
-  zerotier: "tqtezos/tezos-k8s-zerotier:6.6"
+  zerotier: "tqtezos/tezos-k8s-zerotier:1.0.0-beta"
   # rpc-auth: "tqtezos/tezos-k8s-rpc-auth:1.0b1"
   tezos: tezos/tezos:v7-release
 protocol:
