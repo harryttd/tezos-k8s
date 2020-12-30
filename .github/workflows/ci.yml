@@ -186,8 +186,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Extract branch name
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
       - name: log
         run: |
+          echo ${{ steps.extract_branch.outputs.branch }}
           echo "GITHUB_REF $GITHUB_REF"
           echo "GITHUB_HEAD_REF $GITHUB_HEAD_REF"
           echo "GITHUB_BASE_REF $GITHUB_BASE_REF"
@@ -238,7 +242,7 @@ jobs:
   #             yq e ".containers.$image = \"tqtezos/tezos-k8s-$image_name:$VERSION\"" -i $chart/values.yaml
   #           done
 
-  #           # Get any dependencies of the chart
+  #           # Get any dependencies of the chart and generate Chart.lock
   #           helm dependency update $chart
   #         done
 
