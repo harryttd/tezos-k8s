@@ -179,88 +179,74 @@ jobs:
   #         tags: ${{ steps.docker_meta.outputs.tags }}
   #         labels: ${{ steps.docker_meta.outputs.labels }}
 
-  stuff:
+  release_helm_charts:
     runs-on: ubuntu-latest
+    # needs: list_containers_to_publish
+    # if: github.event_name == 'release' && github.event.action == 'created'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Extract branch name
+
+      - name: Configure Git
         run: |
-          raw=$(git branch -r --contains ${{ github.ref }})
-          branch=${raw/origin\/}
-          echo ::set-output name=branch::$branch
-        id: extract_branch
-      - name: log
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.4.0
+
+      - name: Install yq
         run: |
-          echo ${{ steps.extract_branch.outputs.branch }}
-          echo "GITHUB_REF $GITHUB_REF"
-          echo "GITHUB_HEAD_REF $GITHUB_HEAD_REF"
-          echo "GITHUB_BASE_REF $GITHUB_BASE_REF"
-          echo
-          env
+          sudo wget -q https://github.com/mikefarah/yq/releases/download/v4.2.0/yq_linux_amd64 -O /usr/bin/yq
+          sudo chmod +x /usr/bin/yq
 
-  # release_helm_charts:
-  #   runs-on: ubuntu-latest
-  #   # needs: list_containers_to_publish
-  #   # if: github.event_name == 'release' && github.event.action == 'created'
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
+      - name: Get Release Version
+        id: get_release_version
+        run: echo "::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}"
 
-  #     - name: Configure Git
-  #       run: |
-  #         git config user.name "$GITHUB_ACTOR"
-  #         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Set Helm Chart and Image Versions
+        run: |
+          for chart in charts/*; do
+            [[ ! -d "$chart" ]] && continue
+            echo $chart
 
-  #     - name: Install Helm
-  #       uses: azure/setup-helm@v1
-  #       with:
-  #         version: v3.4.0
+            VERSION=${{ steps.get_release_version.outputs.VERSION }}
+            yq e ".version = \"$VERSION\"" -i "$chart/Chart.yaml"
+            tq_images=$(yq e '(.containers[] | select(. == "tqtezos/tezos-k8s*")) | path | .[-1]' "$chart/values.yaml")
 
-  #     - name: Install yq
-  #       run: |
-  #         sudo wget -q https://github.com/mikefarah/yq/releases/download/v4.2.0/yq_linux_amd64 -O /usr/bin/yq
-  #         sudo chmod +x /usr/bin/yq
+            for image in $tq_images; do
+              image_name=$(yq e ".containers.$image" $chart/values.yaml | sed -E "s/.*k8s-(.*):.*/\1/")
+              yq e ".containers.$image = \"tqtezos/tezos-k8s-$image_name:$VERSION\"" -i $chart/values.yaml
+            done
 
-  #     - name: Get Release Version
-  #       id: get_release_version
-  #       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+            # Get any dependencies of the chart and generate Chart.lock
+            helm dependency update $chart
+          done
 
-  #     - name: Set Helm Chart and Image Versions
-  #       run: |
-  #         for chart in charts/*; do
-  #           [[ ! -d "$chart" ]] && continue
-  #           echo $chart
+      - name: Get Branch Name
+        id: get_branch_name
+        run: |
+          raw=$(git branch -r --contains ${GITHUB_REF})
+          branch=${raw##*origin\/}
+          echo "Branch: $branch"
+          echo "::set-output name=BRANCH::$branch"
 
-  #           VERSION=${{ steps.get_release_version.outputs.VERSION }}
-  #           yq e ".version = \"$VERSION\"" -i "$chart/Chart.yaml"
-  #           tq_images=$(yq e '(.containers[] | select(. == "tqtezos/tezos-k8s*")) | path | .[-1]' "$chart/values.yaml")
+      - name: Commit Chart Changes to Branch
+        run: |
+          git commit --all -m "Update Helm Chart Versions to ${{ steps.get_release_version.outputs.VERSION }}"
+          git push origin HEAD:${{ steps.get_branch_name.outputs.BRANCH }}
 
-  #           for image in $tq_images; do
-  #             image_name=$(yq e ".containers.$image" $chart/values.yaml | sed -E "s/.*k8s-(.*):.*/\1/")
-  #             yq e ".containers.$image = \"tqtezos/tezos-k8s-$image_name:$VERSION\"" -i $chart/values.yaml
-  #           done
-
-  #           # Get any dependencies of the chart and generate Chart.lock
-  #           helm dependency update $chart
-  #         done
-
-  #     - name: Commit Chart Changes to Master
-  #       run: |
-  #         git commit --all -m "Update Helm Chart Versions to ${{ steps.get_release_version.outputs.VERSION }}"
-  #         git push origin HEAD:master
-
-  #     - name: Publish Helm charts
-  #       uses: stefanprodan/helm-gh-pages@master
-  #       with:
-  #         token: ${{ secrets.GITHUB_TOKEN }}
-  #         linting: off
-  #       # branch: master
-  #       # target_dir: docs
+      - name: Publish Helm charts
+        uses: stefanprodan/helm-gh-pages@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          linting: off
+        # branch: master
+        # target_dir: docs
 
   # # release:
   # #   runs-on: ubuntu-latest
