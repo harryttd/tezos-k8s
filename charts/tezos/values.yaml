@@ -10,7 +10,7 @@ zerotier_config:
 container_images:
   rpc_auth_image: hello
 containers:
-  zerotier: "tqtezos/tezos-k8s-zerotier:1.0.2"
+  zerotier: "tqtezos/tezos-k8s-zerotier:1.0.3"
   # rpc-auth: "tqtezos/tezos-k8s-rpc-auth:1.0b1"
   tezos: tezos/tezos:v7-release
 protocol:
