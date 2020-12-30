@@ -240,15 +240,15 @@ jobs:
           git commit --all -m "Update Helm Chart Versions to ${{ steps.get_release_version.outputs.VERSION }}"
           git push origin "HEAD:${{ steps.get_branch_name.outputs.BRANCH }}"
 
-      # - name: Publish Helm charts
-      #   uses: stefanprodan/helm-gh-pages@master
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     linting: off
-      #   # branch: master
-      #   # target_dir: docs
+      - name: Publish Helm charts
+        uses: stefanprodan/helm-gh-pages@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          linting: off
+        # branch: master
+        # target_dir: docs
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.1.0
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      # - name: Run chart-releaser
+      #   uses: helm/chart-releaser-action@v1.1.0
+      #   env:
+      #     CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
