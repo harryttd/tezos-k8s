@@ -219,7 +219,7 @@ jobs:
             tq_images=$(yq e '(.containers[] | select(. == "tqtezos/tezos-k8s*")) | path | .[-1]' "$chart/values.yaml")
 
             for image in $tq_images; do
-              image_name=$(yq e ".containers.zerotier" charts/tezos/values.yaml | sed -E "s/.*k8s-(.*):.*/\1/")
+              image_name=$(yq e ".containers.$image" charts/tezos/values.yaml | sed -E "s/.*k8s-(.*):.*/\1/")
               yq e ".containers.$image = \"tqtezos/tezos-k8s-$image_name:$VERSION\"" -i $chart/values.yaml
             done
 
@@ -229,7 +229,7 @@ jobs:
 
       - name: Commit Chart Changes to Master
         run: |
-          git commit --all -m "Update Helm Chart Versions"
+          git commit --all -m "Update Helm Chart Versions to ${{ steps.get_release_version.outputs.VERSION }}"
           git push origin HEAD:master
 
       - name: Publish Helm charts
