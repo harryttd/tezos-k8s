@@ -2,7 +2,7 @@ apiVersion: v2
 name: authenticated-rpc-tezos-chain
 description: A Helm chart for Tezos RPC authentication for a private chain
 type: application
-version: "1.0.0-beta"
+version: "1.0.0"
 keywords:
   - tezos
   - blockchain
