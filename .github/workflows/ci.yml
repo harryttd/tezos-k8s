@@ -99,7 +99,7 @@ jobs:
           pip install wheel
 
       - name: Build Python package
-        run: cd mkchain && python setup.py bdist_wheel
+        run: cd mkchain && python setup.py bdist_wheel -d ../
 
       - name: Install wheels
         run: pip install ./mkchain/dist/*.whl
@@ -107,7 +107,7 @@ jobs:
       - name: pwd
         run: pwd
       - name: ls
-        run: ls .github && ls mkchain/dist
+        run: ls
       - name: echo
         run: echo ${{ github.ref }}
       - name: cd
@@ -119,12 +119,13 @@ jobs:
       #     npm build
       - uses: actions/checkout@v2
       - name: Release
+        working-directory: mkchain
         # uses: ./.github/actions/action-gh-release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           # files: dist/mkchain-1.5.0-py3-none-any.whl
-          files: mkchain/dist/*.whl
+          files: /dist/*.whl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
