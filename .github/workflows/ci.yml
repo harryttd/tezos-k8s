@@ -107,9 +107,15 @@ jobs:
       - name: pwd
         run: pwd
       - name: ls
-        run: ls .github/actions && ls dist
+        run: ls .github && ls mkchain/dist
       - name: echo
         run: echo ${{ github.ref }}
+
+      # - name: annoyin
+      #   run: |
+      #     cd .github/actions/action-gh-release
+      #     npm install --production
+      #     npm build
 
       - name: Release
         uses: ./.github/actions/action-gh-release

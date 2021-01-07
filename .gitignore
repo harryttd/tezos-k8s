@@ -1,6 +1,6 @@
 *~
 .cache
-dist
+# dist
 *.pyc
 *.egg-info
 *.eggs
