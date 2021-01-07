@@ -57,6 +57,8 @@ export const parseConfig = (env: Env): Config => {
 export const paths = (patterns: string[]): string[] => {
   console.log(__dirname, __filename)
   return patterns.reduce((acc: string[], pattern: string): string[] => {
+    console.log("GLOB", glob.sync(pattern))
+    console.log("lstat", lstatSync(glob.sync(pattern)[0]))
     return acc.concat(
       glob.sync(pattern).filter(path => lstatSync(path).isFile())
     );
