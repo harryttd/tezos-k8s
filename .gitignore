@@ -1,7 +1,10 @@
 *~
 .cache
-dist
+# dist
 *.pyc
 *.egg-info
 .venv*
 build
+
+node_modules
+.eggs
