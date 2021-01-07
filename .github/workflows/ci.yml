@@ -102,7 +102,7 @@ jobs:
         run: cd mkchain && python setup.py bdist_wheel -d ../
 
       - name: Install wheels
-        run: pip install ./mkchain/dist/*.whl
+        run: pip install dist/*.whl
 
       - name: pwd
         run: pwd
