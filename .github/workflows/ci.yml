@@ -99,7 +99,7 @@ jobs:
           pip install wheel
 
       - name: Build Python package
-        run: cd mkchain && python setup.py bdist_wheel -d ../ && ls ../
+        run: cd mkchain && python setup.py bdist_wheel -d ../dist && ls ../
 
       - name: Install wheels
         run: pip install dist/*.whl
