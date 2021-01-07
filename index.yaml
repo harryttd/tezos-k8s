@@ -3,7 +3,21 @@ entries:
   authenticated-rpc-tezos-chain:
   - apiVersion: v2
     appVersion: 1.0b1
-    created: "2021-01-07T22:50:57.084302933Z"
+    created: "2021-01-07T23:36:53.628636899Z"
+    description: A Helm chart for Tezos RPC authentication for a private chain
+    digest: 547e9b210b9a0f5fba2c75330a88dd2b1eb48b81e2e405b3dc4625285db93f79
+    home: https://github.com/tqtezos/tezos-k8s
+    keywords:
+    - tezos
+    - blockchain
+    name: authenticated-rpc-tezos-chain
+    type: application
+    urls:
+    - https://harryttd.github.io/tezos-k8s/authenticated-rpc-tezos-chain-1.3.14.tgz
+    version: 1.3.14
+  - apiVersion: v2
+    appVersion: 1.0b1
+    created: "2021-01-07T23:36:53.6283544Z"
     description: A Helm chart for Tezos RPC authentication for a private chain
     digest: 87a9b6110e428ebe12f81ac7af17438df871a43b224d902342cc04d1a4e13300
     home: https://github.com/tqtezos/tezos-k8s
@@ -17,7 +31,7 @@ entries:
     version: 1.3.10
   - apiVersion: v2
     appVersion: 1.0b1
-    created: "2021-01-07T22:50:57.085291833Z"
+    created: "2021-01-07T23:36:53.631162096Z"
     description: A Helm chart for Tezos RPC authentication for a private chain
     digest: c802726bc880499e278d4ce7789f014722652c1f5f697d87430846d819b83dad
     home: https://github.com/tqtezos/tezos-k8s
@@ -31,7 +45,7 @@ entries:
     version: 1.3.9
   - apiVersion: v2
     appVersion: 1.0b1
-    created: "2021-01-07T22:50:57.083940433Z"
+    created: "2021-01-07T23:36:53.6280675Z"
     description: A Helm chart for Tezos RPC authentication for a private chain
     digest: 646eed14a288ae753319ad100dc988adb1adacd6c9e7d7fecc9ebaa2f9b5b3cf
     home: https://github.com/tqtezos/tezos-k8s
@@ -45,7 +59,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0b1
-    created: "2021-01-07T22:50:57.083568633Z"
+    created: "2021-01-07T23:36:53.627747301Z"
     description: A Helm chart for Tezos RPC authentication for a private chain
     digest: b89447a2913b42aa2e3e65302f448f804ab02b51924c1ec804746d5ab9e1119c
     home: https://github.com/tqtezos/tezos-k8s
@@ -59,7 +73,7 @@ entries:
     version: 1.0.9
   - apiVersion: v2
     appVersion: 1.0b1
-    created: "2021-01-07T22:50:57.083188733Z"
+    created: "2021-01-07T23:36:53.627288601Z"
     description: A Helm chart for Tezos RPC authentication for a private chain
     digest: d0279a1a4cec1620482cbd6774678786432c4501860fa823c5ae97fda7a63f7f
     home: https://github.com/tqtezos/tezos-k8s
@@ -73,7 +87,7 @@ entries:
     version: 1.0.6
   - apiVersion: v2
     appVersion: 1.0b1
-    created: "2021-01-07T22:50:57.082712433Z"
+    created: "2021-01-07T23:36:53.62065021Z"
     description: A Helm chart for Tezos RPC authentication for a private chain
     digest: e2af9696c01e7d0f01f5d3319287ff4cd17758c0c5e2f12f4e17dea3e2e67f82
     home: https://github.com/tqtezos/tezos-k8s
@@ -86,7 +100,7 @@ entries:
     - https://harryttd.github.io/tezos-k8s/authenticated-rpc-tezos-chain-1.0.5.tgz
     version: 1.0.5
   - apiVersion: v2
-    created: "2021-01-07T22:50:57.082319033Z"
+    created: "2021-01-07T23:36:53.620364211Z"
     description: A Helm chart for Tezos RPC authentication for a private chain
     digest: 9d306a48f67886aa8e73af2a856367bd2ee1592f9b6ecfc8ec0a96cc010d13b6
     home: https://github.com/tqtezos/tezos-k8s
@@ -99,7 +113,7 @@ entries:
     - https://harryttd.github.io/tezos-k8s/authenticated-rpc-tezos-chain-1.0.3.tgz
     version: 1.0.3
   - apiVersion: v2
-    created: "2021-01-07T22:50:57.081916033Z"
+    created: "2021-01-07T23:36:53.620031511Z"
     description: A Helm chart for Tezos RPC authentication for a private chain
     digest: e63134b908570011f8f3c154a41bea7532f865a8e7c9ef7ef5c14a9ec072b8f2
     home: https://github.com/tqtezos/tezos-k8s
@@ -112,7 +126,7 @@ entries:
     - https://harryttd.github.io/tezos-k8s/authenticated-rpc-tezos-chain-1.0.2.tgz
     version: 1.0.2
   - apiVersion: v2
-    created: "2021-01-07T22:50:57.081314333Z"
+    created: "2021-01-07T23:36:53.619582612Z"
     description: A Helm chart for Tezos RPC authentication for a private chain
     digest: ab305ff7a82e7b478db09880e9263c7e517d8b74d38af451d6e5dffc525205b8
     home: https://github.com/tqtezos/tezos-k8s
@@ -127,7 +141,26 @@ entries:
   tezos-chain:
   - apiVersion: v2
     appVersion: 1.0b1
-    created: "2021-01-07T22:50:57.095607833Z"
+    created: "2021-01-07T23:36:53.639506484Z"
+    dependencies:
+    - condition: rpc_auth
+      name: authenticated-rpc-tezos-chain
+      repository: file://../rpc-auth
+      version: 0.1.0
+    description: A Helm chart for Tezos nodes on Kubernetes
+    digest: 345c7dc16d6e31996e9c90e101e618c6bf3ab03195bf5d29920952dc96eacb9d
+    home: https://github.com/tqtezos/tezos-k8s
+    keywords:
+    - tezos
+    - blockchain
+    name: tezos-chain
+    type: application
+    urls:
+    - https://harryttd.github.io/tezos-k8s/tezos-chain-1.3.14.tgz
+    version: 1.3.14
+  - apiVersion: v2
+    appVersion: 1.0b1
+    created: "2021-01-07T23:36:53.638671786Z"
     dependencies:
     - condition: rpc_auth
       name: authenticated-rpc-tezos-chain
@@ -146,7 +179,7 @@ entries:
     version: 1.3.10
   - apiVersion: v2
     appVersion: 1.0b1
-    created: "2021-01-07T22:50:57.096639733Z"
+    created: "2021-01-07T23:36:53.640301383Z"
     dependencies:
     - condition: rpc_auth
       name: authenticated-rpc-tezos-chain
@@ -165,7 +198,7 @@ entries:
     version: 1.3.9
   - apiVersion: v2
     appVersion: 1.0b1
-    created: "2021-01-07T22:50:57.094489033Z"
+    created: "2021-01-07T23:36:53.637901687Z"
     dependencies:
     - condition: rpc_auth
       name: authenticated-rpc-tezos-chain
@@ -184,7 +217,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0b1
-    created: "2021-01-07T22:50:57.093410133Z"
+    created: "2021-01-07T23:36:53.636773788Z"
     dependencies:
     - condition: rpc_auth
       name: authenticated-rpc-tezos-chain
@@ -203,7 +236,7 @@ entries:
     version: 1.0.9
   - apiVersion: v2
     appVersion: 1.0b1
-    created: "2021-01-07T22:50:57.091954933Z"
+    created: "2021-01-07T23:36:53.63564689Z"
     dependencies:
     - condition: rpc_auth
       name: authenticated-rpc-tezos-chain
@@ -222,7 +255,7 @@ entries:
     version: 1.0.6
   - apiVersion: v2
     appVersion: 1.0b1
-    created: "2021-01-07T22:50:57.089789733Z"
+    created: "2021-01-07T23:36:53.634851291Z"
     dependencies:
     - condition: rpc_auth
       name: authenticated-rpc-tezos-chain
@@ -240,7 +273,7 @@ entries:
     - https://harryttd.github.io/tezos-k8s/tezos-chain-1.0.5.tgz
     version: 1.0.5
   - apiVersion: v2
-    created: "2021-01-07T22:50:57.088578533Z"
+    created: "2021-01-07T23:36:53.633855192Z"
     dependencies:
     - condition: rpc_auth
       name: authenticated-rpc-tezos-chain
@@ -257,7 +290,7 @@ entries:
     - https://harryttd.github.io/tezos-k8s/tezos-chain-1.0.3.tgz
     version: 1.0.3
   - apiVersion: v2
-    created: "2021-01-07T22:50:57.087561033Z"
+    created: "2021-01-07T23:36:53.632904094Z"
     dependencies:
     - condition: rpc_auth
       name: authenticated-rpc-tezos-chain
@@ -274,7 +307,7 @@ entries:
     - https://harryttd.github.io/tezos-k8s/tezos-chain-1.0.2.tgz
     version: 1.0.2
   - apiVersion: v2
-    created: "2021-01-07T22:50:57.086538133Z"
+    created: "2021-01-07T23:36:53.632002995Z"
     dependencies:
     - condition: rpc_auth
       name: authenticated-rpc-tezos-chain
@@ -290,4 +323,4 @@ entries:
     urls:
     - https://harryttd.github.io/tezos-k8s/tezos-chain-1.0.1.tgz
     version: 1.0.1
-generated: "2021-01-07T22:50:57.080664133Z"
+generated: "2021-01-07T23:36:53.618727413Z"
