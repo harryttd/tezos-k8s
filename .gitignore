@@ -12,3 +12,6 @@
 build
 mkchain/generated-values
 charts/tezos/charts
+
+node_modules
+.eggs
