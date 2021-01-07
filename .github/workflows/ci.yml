@@ -110,7 +110,8 @@ jobs:
         run: ls .github && ls mkchain/dist
       - name: echo
         run: echo ${{ github.ref }}
-
+      - name: cd
+        run: cd && pwd
       # - name: annoyin
       #   run: |
       #     cd .github/actions/action-gh-release
