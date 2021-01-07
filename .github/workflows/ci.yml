@@ -107,12 +107,12 @@ jobs:
       - name: pwd
         run: pwd
       - name: ls
-        run: ls ..github/actions/action-gh-release && ls dist
+        run: ls ../.github/actions/action-gh-release && ls dist
       - name: echo
         run: echo ${{ github.ref }}
 
       - name: Release
-        uses: ../.github/actions/action-gh-release
+        uses: '../.github/actions/action-gh-release'
         # uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
