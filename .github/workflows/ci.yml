@@ -187,24 +187,24 @@ jobs:
   #         tags: ${{ steps.docker_meta.outputs.tags }}
   #         labels: ${{ steps.docker_meta.outputs.labels }}
 
-  lint_helm_charts:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  # lint_helm_charts:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Set up Helm
-        uses: azure/setup-helm@v1
-        with:
-          version: v3.4.2
+  #     - name: Set up Helm
+  #       uses: azure/setup-helm@v1
+  #       with:
+  #         version: v3.4.2
 
-      - name: Lint Helm Charts
-        run: helm lint charts/*
+  #     - name: Lint Helm Charts
+  #       run: helm lint charts/*
 
   publish_helm_charts:
     runs-on: ubuntu-latest
     # needs: [lint_helm_charts, publish_containers]
-    needs: [lint_helm_charts]
+    # needs: [lint_helm_charts]
     if: github.event_name == 'release' && github.event.action == 'created'
     steps:
       - name: Checkout
@@ -267,7 +267,7 @@ jobs:
           RELEASE_VERSION=${{ steps.get_release_version.outputs.RELEASE_VERSION }}
           git commit --all -m "Update Helm Chart Versions to $RELEASE_VERSION"
           COMMIT_HASH=$(git rev-parse --short HEAD)
-          git tag -a $RELEASE_VERSION $COMMIT_HASH
+          git tag -af $RELEASE_VERSION $COMMIT_HASH
           git push origin "HEAD:${{ steps.get_branch_name.outputs.BRANCH }}"
 
       - name: Publish Helm charts
