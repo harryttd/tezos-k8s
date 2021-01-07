@@ -104,8 +104,10 @@ jobs:
       - name: Install wheels
         run: pip install dist/*.whl
 
+      - name: pwd
+        run: pwd
       - name: ls
-        run: ls dist
+        run: ls .github/actions/action-gh-release && ls dist
       - name: echo
         run: echo ${{ github.ref }}
 
