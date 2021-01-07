@@ -116,7 +116,7 @@ jobs:
       #     cd .github/actions/action-gh-release
       #     npm install --production
       #     npm build
-
+      - uses: actions/checkout@v2
       - name: Release
         uses: ./.github/actions/action-gh-release
         # uses: softprops/action-gh-release@v1
