@@ -267,8 +267,9 @@ jobs:
           RELEASE_VERSION=${{ steps.get_release_version.outputs.RELEASE_VERSION }}
           git commit --all -m "Update Helm Chart Versions to $RELEASE_VERSION"
           COMMIT_HASH=$(git rev-parse --short HEAD)
-          git tag -af -m "Tag master" $RELEASE_VERSION $COMMIT_HASH
+          git tag -af -m "Tag commit" $RELEASE_VERSION $COMMIT_HASH
           git push origin "HEAD:${{ steps.get_branch_name.outputs.BRANCH }}"
+          git push -f origin "HEAD:${{ steps.get_branch_name.outputs.BRANCH }}" $RELEASE_VERSION
 
       - name: Publish Helm charts
         uses: stefanprodan/helm-gh-pages@master
