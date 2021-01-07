@@ -75,9 +75,9 @@ jobs:
   publish_mkchain:
     # needs: test
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: ./mkchain
+    # defaults:
+    #   run:
+    #     working-directory: ./mkchain
     strategy:
       fail-fast: false
       # after we test that the module works on all systems we only need to build one since this is a pure python module
@@ -99,15 +99,15 @@ jobs:
           pip install wheel
 
       - name: Build Python package
-        run: python setup.py bdist_wheel
+        run: python ./mkchain/setup.py bdist_wheel
 
       - name: Install wheels
-        run: pip install dist/*.whl
+        run: pip install ./mkchain/dist/*.whl
 
       - name: pwd
         run: pwd
       - name: ls
-        run: ls ../.github/actions/action-gh-release && ls dist
+        run: ls ./.github/actions/action-gh-release && ls dist
       - name: echo
         run: echo ${{ github.ref }}
 
