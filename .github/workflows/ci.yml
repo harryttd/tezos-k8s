@@ -99,27 +99,10 @@ jobs:
           pip install wheel
 
       - name: Build Python package
-        run: cd mkchain && python setup.py bdist_wheel -d ../dist && ls ../
+        run: python setup.py bdist_wheel && ls
 
       - name: Install wheels
         run: pip install dist/*.whl
-
-      - name: pwd
-        run: pwd
-      - name: ls
-        run: ls
-      - name: echo
-        run: echo ${{ github.ref }}
-      # - name: cd
-      #   run: cd && pwd
-      # - name: annoyin
-      #   run: |
-      #     cd .github/actions/action-gh-release
-      #     npm install --production
-      #     npm build
-
-      - name: ls2
-        run: ls
 
       - name: Release
         # uses: ./.github/actions/action-gh-release
