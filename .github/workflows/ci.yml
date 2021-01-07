@@ -100,9 +100,11 @@ jobs:
 
       - name: Build Python package
         run: python setup.py bdist_wheel && ls
+        working-directory: mkchain
 
       - name: Install wheels
         run: pip install dist/*.whl
+        working-directory: mkchain
 
       - name: Release
         # uses: ./.github/actions/action-gh-release
