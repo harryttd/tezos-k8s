@@ -107,7 +107,7 @@ jobs:
       - name: pwd
         run: pwd
       - name: ls
-        run: ls .github/actions && ls dist
+        run: ls .github && ls mkchain/dist
       - name: echo
         run: echo ${{ github.ref }}
 
