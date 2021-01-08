@@ -247,8 +247,8 @@ jobs:
             [[ ! -d "$chart" ]] && continue
             echo $chart
 
-            # Update Chart.yaml with release version
-            yq e ".version = \"$RELEASE_VERSION\"" -i "$chart/Chart.yaml"
+            # # Update Chart.yaml with release version
+            # yq e ".version = \"$RELEASE_VERSION\"" -i "$chart/Chart.yaml"
 
             # Get tqtezos/tezos-k8s images specified in values.yaml
             tq_images=$(yq e '(.containers[] | select(. == "tqtezos/tezos-k8s*")) | path | .[-1]' "$chart/values.yaml")
@@ -260,7 +260,12 @@ jobs:
 
             # Get any dependencies of the chart and generate Chart.lock
             helm dependency update $chart
+
+            cat $chart/values.yaml
           done
+
+      - name: cat
+        run: cat charts/tezos/values.yaml
 
       # - name: Get Release Branch Name
       #   id: get_branch_name
@@ -279,20 +284,13 @@ jobs:
       #     git push origin "HEAD:${{ steps.get_branch_name.outputs.BRANCH }}"
       #     git push -f origin "HEAD:${{ steps.get_branch_name.outputs.BRANCH }}" $RELEASE_VERSION
 
-      - uses: actions/checkout@v2
-        with:
-          # Repository name with owner. For example, actions/checkout
-          # Default: ${{ github.repository }}
-          path: helm-repo
-          repository: harryttd/tezos-helm-charts
-
       - name: Publish Helm charts
         uses: stefanprodan/helm-gh-pages@master
         with:
-          token: ${{ secrets.BOT_GITHUB_TOKEN }}
           linting: off # We already linted in a job before
+          token: ${{ secrets.CI_GITHUB_TOKEN }}
+          branch: main
           owner: harryttd
           repository: tezos-helm-charts
-          branch: main
-          # charts_dir: main/charts
-          # charts_url: https://harryttd.github.io/tezos-helm-charts
+          app_version: ${{ steps.get_release_version.outputs.RELEASE_VERSION }}
+          chart_version: ${{ steps.get_release_version.outputs.RELEASE_VERSION }}
