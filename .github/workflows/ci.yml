@@ -283,7 +283,7 @@ jobs:
         with:
           # Repository name with owner. For example, actions/checkout
           # Default: ${{ github.repository }}
-          path: helm-repo
+          # path: helm-repo
           repository: harryttd/tezos-helm-charts
 
       - name: Publish Helm charts
@@ -294,5 +294,5 @@ jobs:
           owner: harryttd
           repository: tezos-helm-charts
           branch: main
-          charts_dir: helm-repo/charts
+          charts_dir: main/charts
           # charts_url: https://harryttd.github.io/tezos-helm-charts
