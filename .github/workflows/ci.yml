@@ -289,7 +289,7 @@ jobs:
       - name: Publish Helm charts
         uses: stefanprodan/helm-gh-pages@master
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.BOT_GITHUB_TOKEN }}
           linting: off # We already linted in a job before
           owner: harryttd
           repository: tezos-helm-charts
