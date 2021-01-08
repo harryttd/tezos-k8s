@@ -280,7 +280,7 @@ jobs:
         with:
           # Repository name with owner. For example, actions/checkout
           # Default: ${{ github.repository }}
-          repository: 'tezos-helm-charts'
+          repository: harryttd/tezos-helm-charts
 
       - name: Publish Helm charts
         uses: stefanprodan/helm-gh-pages@master
