@@ -219,6 +219,7 @@ jobs:
           path: main
 
       - name: Configure Git
+        working-directory: main
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
@@ -238,6 +239,7 @@ jobs:
         run: echo "::set-output name=RELEASE_VERSION::${GITHUB_REF/refs\/tags\//}"
 
       - name: Set Helm Chart and Image Versions
+        working-directory: main
         run: |
           RELEASE_VERSION=${{ steps.get_release_version.outputs.RELEASE_VERSION }}
 
