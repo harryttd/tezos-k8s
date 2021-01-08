@@ -251,11 +251,11 @@ jobs:
             # yq e ".version = \"$RELEASE_VERSION\"" -i "$chart/Chart.yaml"
 
             # Get tqtezos/tezos-k8s images specified in values.yaml
-            tq_images=$(yq e '(.containers[] | select(. == "tqtezos/tezos-k8s*")) | path | .[-1]' "$chart/values.yaml")
-            # Update the release version of each of tqtezos/tezos-k8s images
+            tq_images=$(yq e '(.images[] | select(. == "tezos-k8s*")) | path | .[-1]' "$chart/values.yaml")
+            # Update the release version of each of tezos-k8s images
             for image in $tq_images; do
-              image_name=$(yq e ".containers.$image" $chart/values.yaml | sed -E "s/.*k8s-(.*):.*/\1/")
-              yq e ".containers.$image = \"tqtezos/tezos-k8s-$image_name:$RELEASE_VERSION\"" -i $chart/values.yaml
+              image_name=$(yq e ".images.$image" $chart/values.yaml | sed -E "s/tezos-k8s-(.*):.*/\1/")
+              yq e ".images.$image = \"tqtezos/tezos-k8s-$image_name:$RELEASE_VERSION\"" -i $chart/values.yaml
             done
 
             # Get any dependencies of the chart and generate Chart.lock
