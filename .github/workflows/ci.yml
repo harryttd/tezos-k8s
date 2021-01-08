@@ -259,22 +259,22 @@ jobs:
             helm dependency update $chart
           done
 
-      - name: Get Release Branch Name
-        id: get_branch_name
-        run: |
-          raw=$(git branch -r --contains ${GITHUB_REF})
-          branch=${raw##*origin\/}
-          echo "Branch: $branch"
-          echo "::set-output name=BRANCH::$branch"
+      # - name: Get Release Branch Name
+      #   id: get_branch_name
+      #   run: |
+      #     raw=$(git branch -r --contains ${GITHUB_REF})
+      #     branch=${raw##*origin\/}
+      #     echo "Branch: $branch"
+      #     echo "::set-output name=BRANCH::$branch"
 
-      - name: Commit Chart Changes to Branch
-        run: |
-          RELEASE_VERSION=${{ steps.get_release_version.outputs.RELEASE_VERSION }}
-          git commit --all -m "Update Helm Chart Versions to $RELEASE_VERSION"
-          COMMIT_HASH=$(git rev-parse --short HEAD)
-          git tag -af -m "Tag commit" $RELEASE_VERSION $COMMIT_HASH
-          git push origin "HEAD:${{ steps.get_branch_name.outputs.BRANCH }}"
-          git push -f origin "HEAD:${{ steps.get_branch_name.outputs.BRANCH }}" $RELEASE_VERSION
+      # - name: Commit Chart Changes to Branch
+      #   run: |
+      #     RELEASE_VERSION=${{ steps.get_release_version.outputs.RELEASE_VERSION }}
+      #     git commit --all -m "Update Helm Chart Versions to $RELEASE_VERSION"
+      #     COMMIT_HASH=$(git rev-parse --short HEAD)
+      #     git tag -af -m "Tag commit" $RELEASE_VERSION $COMMIT_HASH
+      #     git push origin "HEAD:${{ steps.get_branch_name.outputs.BRANCH }}"
+      #     git push -f origin "HEAD:${{ steps.get_branch_name.outputs.BRANCH }}" $RELEASE_VERSION
 
       - name: Publish Helm charts
         uses: stefanprodan/helm-gh-pages@master
@@ -283,4 +283,5 @@ jobs:
           linting: off # We already linted in a job before
           owner: harryttd
           repository: tezos-helm-charts
+          branch: main
           # charts_url: https://harryttd.github.io/tezos-helm-charts
