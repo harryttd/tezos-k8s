@@ -216,10 +216,10 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          path: main
+          # path: main
 
       - name: Configure Git
-        working-directory: main
+        # working-directory: main
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
@@ -239,7 +239,7 @@ jobs:
         run: echo "::set-output name=RELEASE_VERSION::${GITHUB_REF/refs\/tags\//}"
 
       - name: Set Helm Chart and Image Versions
-        working-directory: main
+        # working-directory: main
         run: |
           RELEASE_VERSION=${{ steps.get_release_version.outputs.RELEASE_VERSION }}
 
@@ -283,7 +283,7 @@ jobs:
         with:
           # Repository name with owner. For example, actions/checkout
           # Default: ${{ github.repository }}
-          # path: helm-repo
+          path: helm-repo
           repository: harryttd/tezos-helm-charts
 
       - name: Publish Helm charts
@@ -294,5 +294,5 @@ jobs:
           owner: harryttd
           repository: tezos-helm-charts
           branch: main
-          charts_dir: main/charts
+          # charts_dir: main/charts
           # charts_url: https://harryttd.github.io/tezos-helm-charts
