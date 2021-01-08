@@ -265,7 +265,14 @@ jobs:
           done
 
       - name: cat
-        run: cat charts/tezos/values.yaml
+        run: |
+          for chart in charts/*; do
+            [[ ! -d "$chart" ]] && continue
+            echo $chart
+            cat $chart/Chart.yaml
+            cat $chart/values.yaml
+            cat $chart/Chart.lock > /dev/null || true
+          done
 
       # - name: Get Release Branch Name
       #   id: get_branch_name
