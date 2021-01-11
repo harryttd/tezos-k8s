@@ -248,7 +248,7 @@ jobs:
             echo $chart
 
             # Update Chart.yaml with release version
-            yq e ".version = \"$RELEASE_VERSION\"" -i "$chart/Chart.yaml"
+            # yq e ".version = \"$RELEASE_VERSION\"" -i "$chart/Chart.yaml"
 
             # Get tqtezos/tezos-k8s images specified in values.yaml
             tq_images=$(yq e '(.images[] | select(. == "tezos-k8s*")) | path | .[-1]' "$chart/values.yaml")
@@ -261,17 +261,21 @@ jobs:
             # Get any dependencies of the chart and generate Chart.lock
             # helm dependency update $chart
 
-            cat $chart/values.yaml
+            head -n 20 $chart/values.yaml
           done
 
       - name: cat
         run: |
           for chart in charts/*; do
             [[ ! -d "$chart" ]] && continue
-            echo $chart
+            echo "CHART: $chart"
             cat $chart/Chart.yaml
-            cat $chart/values.yaml
-            cat $chart/Chart.lock > /dev/null || true
+            echo "VALUES: $chart"
+            head -n 20 $chart/values.yaml
+            if [[ -f "$chart/Chart.lock" ]]; then
+              echo "LOCK: $chart"
+              cat $chart/Chart.lock
+            fi
           done
 
       # - name: Get Release Branch Name
