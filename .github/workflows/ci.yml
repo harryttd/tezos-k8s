@@ -72,52 +72,53 @@ jobs:
   #     - name: pytest
   #       run: pytest tests
 
-  # publish_mkchain:
-  #   # needs: test
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     fail-fast: false
-  #     # after we test that the module works on all systems we only need to build one since this is a pure python module
-  #     matrix:
-  #       python-version: [3.8]
-  #       os: [ubuntu-latest]
+  publish_mkchain:
+    # needs: test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      # after we test that the module works on all systems we only need to build one since this is a pure python module
+      matrix:
+        python-version: [3.8]
+        os: [ubuntu-latest]
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - uses: actions/setup-python@v1
-  #       with:
-  #         python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
 
-  #     - name: Install dependencies
-  #       run: |
-  #         python -m pip install --upgrade pip
-  #         pip install pyyaml
-  #         pip install wheel
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+          pip install wheel
 
-  #     - name: Build Python package
-  #       run: python setup.py bdist_wheel
-  #       working-directory: mkchain
+      - name: Build Python package
+        run: python setup.py bdist_wheel
+        working-directory: mkchain
 
-  #     - name: Install wheels
-  #       run: pip install dist/*.whl
-  #       working-directory: mkchain
+      - name: Install wheels
+        run: pip install dist/*.whl
+        working-directory: mkchain
 
-  #     - name: Release
-  #       uses: softprops/action-gh-release@v1
-  #       if: startsWith(github.ref, 'refs/tags/')
-  #       # if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/')
-  #       with:
-  #         files: "**/mkchain/dist/*.whl"
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        # if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/')
+        with:
+          files: "**/mkchain/dist/*.whl"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Publish package to PyPI
-      #   if: github.event_name == 'release' && github.event.action == 'created'
-      #   uses: pypa/gh-action-pypi-publish@master
-      #   with:
-      #     user: __token__
-      #     password: ${{ secrets.PYPI_TOKEN }}
+      - name: Publish package to PyPI
+        # if: github.event_name == 'release' && github.event.action == 'created'
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}
+          packages_dir: mkchain/dist/
 
   # list_containers_to_publish:
   #   # based on
@@ -214,20 +215,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          # path: main
+      #   with:
+      #     fetch-depth: 0
+      #     # path: main
 
-      - name: Configure Git
-        # working-directory: main
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      # - name: Configure Git
+      #   # working-directory: main
+      #   run: |
+      #     git config user.name "$GITHUB_ACTOR"
+      #     git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Install Helm
-        uses: azure/setup-helm@v1
-        with:
-          version: v3.4.2
+      # - name: Install Helm
+      #   uses: azure/setup-helm@v1
+      #   with:
+      #     version: v3.4.2
 
       - name: Install yq
         run: |
@@ -257,21 +258,20 @@ jobs:
               image_name=$(yq e ".images.$image" $chart/values.yaml | sed -E "s/tezos-k8s-(.*):.*/\1/")
               yq e ".images.$image = \"tqtezos/tezos-k8s-$image_name:$RELEASE_VERSION\"" -i $chart/values.yaml
             done
-
-            # Get any dependencies of the chart and generate Chart.lock
-            # helm dependency update $chart
-
-            cat $chart/values.yaml
           done
 
       - name: cat
         run: |
           for chart in charts/*; do
             [[ ! -d "$chart" ]] && continue
-            echo $chart
+            echo "CHART: $chart"
             cat $chart/Chart.yaml
-            cat $chart/values.yaml
-            cat $chart/Chart.lock > /dev/null || true
+            echo "VALUES: $chart"
+            head -n 20 $chart/values.yaml
+            if [[ -f "$chart/Chart.lock" ]]; then
+              echo "LOCK: $chart"
+              cat $chart/Chart.lock
+            fi
           done
 
       # - name: Get Release Branch Name
@@ -297,7 +297,5 @@ jobs:
           linting: off # We already linted in a job before
           token: ${{ secrets.CI_GITHUB_TOKEN }}
           branch: main
-          owner: harryttd
+          owner: ${{ github.repository_owner }}
           repository: tezos-helm-charts
-          app_version: ${{ steps.get_release_version.outputs.RELEASE_VERSION }}
-          chart_version: ${{ steps.get_release_version.outputs.RELEASE_VERSION }}
