@@ -214,20 +214,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      #   with:
-      #     fetch-depth: 0
-      #     # path: main
+        with:
+          fetch-depth: 0
+          # path: main
 
-      # - name: Configure Git
-      #   # working-directory: main
-      #   run: |
-      #     git config user.name "$GITHUB_ACTOR"
-      #     git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Configure Git
+        # working-directory: main
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      # - name: Install Helm
-      #   uses: azure/setup-helm@v1
-      #   with:
-      #     version: v3.4.2
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.4.2
 
       - name: Install yq
         run: |
@@ -239,7 +239,6 @@ jobs:
         run: echo "::set-output name=RELEASE_VERSION::${GITHUB_REF/refs\/tags\//}"
 
       - name: Set Helm Chart and Image Versions
-        # working-directory: main
         run: |
           RELEASE_VERSION=${{ steps.get_release_version.outputs.RELEASE_VERSION }}
 
@@ -257,26 +256,21 @@ jobs:
               image_name=$(yq e ".images.$image" $chart/values.yaml | sed -E "s/tezos-k8s-(.*):.*/\1/")
               yq e ".images.$image = \"tqtezos/tezos-k8s-$image_name:$RELEASE_VERSION\"" -i $chart/values.yaml
             done
-
-            # Get any dependencies of the chart and generate Chart.lock
-            # helm dependency update $chart
-
-            head -n 20 $chart/values.yaml
           done
 
-      - name: cat
-        run: |
-          for chart in charts/*; do
-            [[ ! -d "$chart" ]] && continue
-            echo "CHART: $chart"
-            cat $chart/Chart.yaml
-            echo "VALUES: $chart"
-            head -n 20 $chart/values.yaml
-            if [[ -f "$chart/Chart.lock" ]]; then
-              echo "LOCK: $chart"
-              cat $chart/Chart.lock
-            fi
-          done
+      # - name: cat
+      #   run: |
+      #     for chart in charts/*; do
+      #       [[ ! -d "$chart" ]] && continue
+      #       echo "CHART: $chart"
+      #       cat $chart/Chart.yaml
+      #       echo "VALUES: $chart"
+      #       head -n 20 $chart/values.yaml
+      #       if [[ -f "$chart/Chart.lock" ]]; then
+      #         echo "LOCK: $chart"
+      #         cat $chart/Chart.lock
+      #       fi
+      #     done
 
       # - name: Get Release Branch Name
       #   id: get_branch_name
@@ -295,16 +289,22 @@ jobs:
       #     git push origin "HEAD:${{ steps.get_branch_name.outputs.BRANCH }}"
       #     git push -f origin "HEAD:${{ steps.get_branch_name.outputs.BRANCH }}" $RELEASE_VERSION
 
-      - name: Publish Helm charts
-        uses: stefanprodan/helm-gh-pages@master
-        with:
-          linting: off # We already linted in a job before
-          token: ${{ secrets.CI_GITHUB_TOKEN }}
-          branch: main
-          owner: harryttd
-          repository: tezos-helm-charts
+      # - name: Publish Helm charts
+      #   uses: stefanprodan/helm-gh-pages@master
+      #   with:
+      #     linting: off # We already linted in a job before
+      #     token: ${{ secrets.CI_GITHUB_TOKEN }}
+      #     branch: main
+      #     owner: harryttd
+      #     repository: tezos-helm-charts
           # app_version: ${{ steps.get_release_version.outputs.RELEASE_VERSION }}
           # chart_version: ${{ steps.get_release_version.outputs.RELEASE_VERSION }}
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.1.0
+        env:
+          CR_TOKEN: "${{ secrets.CI_GITHUB_TOKEN }}"
+          charts_repo_url: https://harryttd.github.io/tezos-helm-charts
 
 
       - name: cat2
